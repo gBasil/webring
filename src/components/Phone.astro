@@ -1,0 +1,72 @@
+<div class='phone'>
+	<div class='header'></div>
+	<div class='screen'>
+		<slot />
+	</div>
+	<div class='footer'>
+		<button id='home'></button>
+	</div>
+</div>
+
+<style>
+	.phone {
+		padding: 0px 8px;
+		border-radius: 32px;
+		background-color: black;
+
+		.header,
+		.footer {
+			height: 80px;
+			display: grid;
+			place-items: center;
+		}
+
+		.header {
+			position: relative;
+
+			&::before {
+				content: '';
+				display: block;
+				position: absolute;
+				left: calc(50% - 48px);
+				width: 8px;
+				height: 8px;
+				border-radius: 999px;
+				background-color: #515151;
+			}
+			&::after {
+				content: '';
+				display: block;
+				width: 56px;
+				height: 4px;
+				border-radius: 999px;
+				background-color: #515151;
+			}
+		}
+
+		.footer button {
+			all: unset;
+			display: block;
+			width: 48px;
+			height: 48px;
+			border-radius: 999px;
+			border: 2px solid #515151;
+			cursor: pointer;
+
+			&:active {
+				border-color: #2a2a2a;
+			}
+		}
+
+		.screen {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+
+			width: 350px;
+			height: 590px;
+			background-color: #004f49;
+		}
+	}
+</style>

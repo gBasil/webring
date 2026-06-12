@@ -1,11 +1,413 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Phone from '../components/Phone.astro';
+import About from '../components/apps/About.astro';
+import { members } from '../lib/members';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const maxIconsPerPage = 4 * 6;
+const pageCount = Math.ceil(members.length / maxIconsPerPage);
 ---
 
 <Layout>
-	<Welcome />
+	<Phone>
+		<div class='scroller'>
+			<div class='icons'>
+				<!-- Rather yucky code to split the icons across several pages -->
+				{
+					Array.from({ length: pageCount }, (_, i) => {
+						const entries = members.slice(
+							i * maxIconsPerPage,
+							(i + 1) * maxIconsPerPage,
+						);
+						return (
+							<div class='page'>
+								{entries.map((e) => (
+									// This HTML structure is jank because the page was originally written for a webring that formatted members like that
+									<div>
+										<a href={e.url}>{e.name}</a>
+										<img
+											src={`/avatars/${e.id}.svg`}
+											width='52'
+											height='52'
+										/>
+									</div>
+								))}
+							</div>
+						);
+					})
+				}
+			</div>
+		</div>
+
+		<div class='bottom'>
+			<div class='pagination'>
+				{
+					pageCount > 1 &&
+						Array.from({ length: pageCount }, (_, i) => (
+							<div class={i === 0 ? 'selected' : undefined} />
+						))
+				}
+			</div>
+			<div class='bar'>
+				{
+					/*
+					<div>
+						<a href='/prev'>
+							<img src='/images/left.svg' width='52' height='52' />
+						</a>
+					</div>
+					*/
+				}
+				<div>
+					<button id='about-icon'>
+						<img
+							src='/images/question.svg'
+							width='52'
+							height='52'
+						/>
+					</button>
+				</div>
+				{
+					/*
+					<div>
+						<a href='/next'>
+							<img src='/images/right.svg' width='52' height='52' />
+						</a>
+					</div>
+					*/
+				}
+			</div>
+		</div>
+
+		<About />
+
+		{/* Put custom apps here */}
+	</Phone>
 </Layout>
+
+<style>
+	:root {
+		--icon-size: 52px;
+		--icon-radius: 14px;
+		--icon-active-filter: brightness(0.4);
+
+		--app-open-ease: cubic-bezier(0.45, 0.02, 0, 0.97);
+		--app-open-icon-transition:
+			left 0.6s var(--app-open-ease), top 0.6s var(--app-open-ease),
+			border-radius 0.6s var(--app-open-ease),
+			width 0.6s var(--app-open-ease), height 0.6s var(--app-open-ease);
+	}
+
+	html::after {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		background: radial-gradient(#2d637c, #043958);
+	}
+
+	body {
+		display: grid;
+		place-items: center;
+		height: 100vh;
+		margin: 0;
+		font-family:
+			system-ui,
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			Roboto,
+			Oxygen,
+			Ubuntu,
+			Cantarell,
+			'Open Sans',
+			'Helvetica Neue',
+			sans-serif;
+	}
+
+	.scroller {
+		overflow-x: scroll;
+		scroll-snap-type: x mandatory;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
+		.icons {
+			display: flex;
+			min-width: max-content;
+
+			.page {
+				display: flex;
+				flex-wrap: wrap;
+				align-content: flex-start;
+				gap: 8px;
+
+				scroll-snap-align: center;
+
+				width: calc(72px * 4 + 8px * 3);
+				margin: 19px;
+				margin-bottom: 0;
+
+				/* Each user entry */
+				> div {
+					position: relative;
+					width: 64px;
+					height: 64px;
+					padding: 4px;
+
+					&:active img {
+						filter: var(--icon-active-filter);
+					}
+
+					img {
+						display: block;
+						width: var(--icon-size);
+						height: var(--icon-size);
+						margin: auto;
+						border-radius: var(--icon-radius);
+
+						z-index: 2;
+						transition: var(--app-open-icon-transition);
+					}
+
+					a {
+						position: absolute;
+						inset: 0;
+						align-content: end;
+						text-align: center;
+
+						z-index: 1;
+
+						color: #ffffffe6;
+						font-size: 10px;
+						text-decoration: none;
+						user-select: none;
+						cursor: pointer;
+					}
+				}
+			}
+		}
+	}
+
+	.bottom {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.pagination {
+			display: flex;
+			justify-content: center;
+			gap: 8px;
+
+			> div {
+				width: 6px;
+				height: 6px;
+				border-radius: 999px;
+				background-color: #ffffff72;
+				position: relative;
+
+				&::after {
+					content: '';
+					position: absolute;
+					inset: -4px;
+					bottom: -6px;
+				}
+
+				&.selected {
+					background-color: white;
+				}
+			}
+		}
+
+		.bar {
+			display: flex;
+			justify-content: center;
+			gap: 28px;
+			padding: 10px;
+			background-color: #ffffff72;
+
+			/* We have a placeholder item here so that we can retain the icon position and also animate it. */
+			> div,
+			button {
+				all: unset; /* Reset button styles */
+				height: var(--icon-size);
+				width: var(--icon-size);
+				cursor: pointer;
+
+				img {
+					display: block;
+					height: var(--icon-size);
+					width: var(--icon-size);
+					border-radius: var(--icon-radius);
+
+					z-index: 2;
+					transition: var(--app-open-icon-transition);
+
+					&:active {
+						filter: var(--icon-active-filter);
+					}
+				}
+			}
+		}
+	}
+</style>
+
+<script>
+	const pagination: HTMLDivElement = document.querySelector('.pagination')!;
+	const scroller: HTMLDivElement = document.querySelector('.scroller')!;
+	const screen: HTMLDivElement = document.querySelector('.screen')!;
+	const home: HTMLButtonElement = document.querySelector('#home')!;
+
+	const pageWidth = screen.clientWidth;
+
+	for (let i = 0; i < pagination.children.length; i++) {
+		const dot = pagination.children[i];
+		dot.addEventListener('click', () => {
+			// Unable to get smooth scroll working, even when scrolling the scroller element
+			const page = document.querySelectorAll('.page')[i];
+			page.scrollIntoView({ behavior: 'smooth' });
+		});
+	}
+
+	let selectedPage = 0;
+	scroller.addEventListener('scroll', (e) => {
+		const scroll = (e.target as HTMLDivElement).scrollLeft;
+		const newSelectedPage = Math.ceil((scroll - pageWidth / 2) / pageWidth);
+
+		if (selectedPage !== newSelectedPage) {
+			pagination.children[selectedPage].classList.remove('selected');
+			pagination.children[newSelectedPage].classList.add('selected');
+			selectedPage = newSelectedPage;
+		}
+	});
+
+	// Behold! Terrible! App entering/exiting logic!
+
+	function animationLock() {
+		// Lock scrolling when animating
+		scroller.style.overflow = 'hidden';
+		animating = true;
+
+		setTimeout(() => {
+			scroller.attributeStyleMap.delete('overflow');
+			animating = false;
+		}, 600);
+	}
+
+	const appRect = screen.getBoundingClientRect();
+	const appScale =
+		document.querySelector('img[src^="/avatars/"]')!.getBoundingClientRect()
+			.width / appRect.width;
+	let iconRect: DOMRect;
+	let icon: HTMLDivElement;
+	let app: HTMLDivElement;
+	let onHome = true;
+	let animating = false;
+
+	function openApp(icon_: HTMLImageElement, app_: HTMLDivElement) {
+		if (animating || !onHome) return;
+		onHome = false;
+		animationLock();
+
+		icon = icon_;
+		app = app_;
+		iconRect = icon.getBoundingClientRect();
+
+		app.style.display = 'block'; // Show the app
+		app.style.left = iconRect.left - appRect.left + 'px';
+		app.style.top =
+			// Offsets the icon relative to the screen, which is the closest relatively-positioned ancestor
+			iconRect.top -
+			appRect.top -
+			// Offset to make up for the clip path (taking in account the scale)
+			(appRect.height * appScale - iconRect.height) / 2 +
+			'px';
+		// This could probably be done statically, but might as well do it like this so we don't have to change numbers in two places (more than we already do)
+		app.style.width = appRect.width + 'px';
+		app.style.height = appRect.height + 'px';
+		app.style.scale = appScale + '';
+		app.style.clipPath = `inset(${(appRect.height - appRect.width) / 2}px 0px round ${14 / appScale}px)`;
+
+		icon.style.position = 'fixed';
+		icon.style.left = iconRect.left + 'px';
+		icon.style.top = iconRect.top + 'px';
+
+		setTimeout(() => {
+			icon.style.left = appRect.left + 'px';
+			icon.style.top =
+				appRect.top + (appRect.height - appRect.width) / 2 + 'px';
+			icon.style.width = appRect.width + 'px';
+			icon.style.height = appRect.width + 'px';
+			icon.style.borderRadius = '0px';
+
+			app.classList.add('visible');
+		});
+
+		setTimeout(() => {
+			// Fixes the icon showing up when i.e. overscrolling
+			icon.style.opacity = '0';
+		}, 300);
+	}
+
+	function closeApp() {
+		if (animating || onHome) return;
+		animationLock();
+
+		app.classList.remove('visible');
+		app.style.display = 'block'; // Show the app
+		app.style.left = iconRect.left - appRect.left + 'px';
+		app.style.top =
+			// Offsets the icon relative to the screen, which is the closest relatively-positioned ancestor
+			iconRect.top -
+			appRect.top -
+			// Offset to make up for the clip path (taking in account the scale)
+			(appRect.height * appScale - iconRect.height) / 2 +
+			'px';
+		// This could probably be done statically, but might as well do it like this so we don't have to change numbers in two places (more than we already do)
+		app.style.width = appRect.width + 'px';
+		app.style.height = appRect.height + 'px';
+		app.style.scale = appScale + '';
+		app.style.clipPath = `inset(${(appRect.height - appRect.width) / 2}px 0px round ${14 / appScale}px)`;
+
+		icon.style.opacity = '1';
+		icon.style.left = iconRect.left + 'px';
+		icon.style.top = iconRect.top + 'px';
+		icon.style.width = 'var(--icon-size)';
+		icon.style.height = 'var(--icon-size)';
+		icon.style.borderRadius = 'var(--icon-radius)';
+
+		setTimeout(() => {
+			app.attributes.removeNamedItem('style');
+			icon.attributes.removeNamedItem('style');
+
+			onHome = true;
+		}, 600);
+	}
+
+	// App listeners
+	const aboutIcon: HTMLImageElement =
+		document.querySelector('#about-icon img')!;
+	const about: HTMLDivElement = document.querySelector('#about')!;
+
+	aboutIcon.addEventListener('click', () => openApp(aboutIcon, about));
+
+	home.addEventListener('click', closeApp);
+
+	// Automatically create app open handlers
+	for (const app of document.querySelectorAll<HTMLDivElement>(
+		'div.app:not(#about)',
+	)) {
+		const id = app.id;
+		const icon: HTMLImageElement = document.querySelector(
+			`img[src="/avatars/${id}.svg"]`,
+		)!;
+		const link = icon.previousElementSibling as HTMLAnchorElement;
+
+		link.attributes.removeNamedItem('href');
+		link.addEventListener('click', (e) => {
+			e.preventDefault();
+			openApp(icon, app);
+		});
+	}
+</script>

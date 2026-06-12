@@ -9,9 +9,9 @@ export const GET = (({ redirect, url }) => {
 	const i = members.findIndex((e) => e.id === id);
 	if (i === -1) return redirect('/rand');
 
-	const next = members[(i + 1) % members.length];
+	const prev = members.at(i - 1)!;
 
-	return redirect(next.url);
+	return redirect(prev.url);
 }) satisfies APIRoute;
 
 export const prerender = false;

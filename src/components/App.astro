@@ -1,0 +1,48 @@
+---
+interface Props {
+	/** The member ID to associate this app with. */
+	id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div id={id} class='app'>
+	<slot />
+</div>
+
+<style>
+	.app {
+		position: absolute;
+		inset: 0;
+		display: none;
+		box-sizing: border-box; /* Fixes the forced dimensions we set for the sake of animation */
+		transform-origin: top left; /* Our animations are based on this */
+		background-color: white;
+		font-size: 14px;
+		z-index: 3;
+		--transition:
+			left 0.6s var(--app-open-ease), top 0.6s var(--app-open-ease),
+			clip-path 0.6s var(--app-open-ease), scale 0.6s var(--app-open-ease);
+		transition:
+			var(--transition),
+			opacity 0.3s var(--app-open-ease) 0.1s;
+
+		/* Sorry about the overscroll! If it's enough of an issue, I'll fix it! */
+		overflow: auto;
+
+		opacity: 0;
+
+		&.visible {
+			transition:
+				var(--transition),
+				opacity 0.3s var(--app-open-ease);
+
+			left: 0px !important;
+			top: 0px !important;
+			scale: 1 !important;
+			clip-path: inset(0px 0px round 0px) !important;
+			opacity: 1;
+		}
+	}
+</style>
