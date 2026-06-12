@@ -1,0 +1,28 @@
+{
+	"name": "webring",
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro",
+		"prepare": "vp config"
+	},
+	"dependencies": {
+		"astro": "^6.4.6"
+	},
+	"devDependencies": {
+		"vite-plus": "latest"
+	},
+	"engines": {
+		"node": ">=22.12.0"
+	},
+	"packageManager": "pnpm@11.6.0",
+	"pnpm": {
+		"overrides": {
+			"vite": "npm:@voidzero-dev/vite-plus-core@latest",
+			"vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+		}
+	}
+}
