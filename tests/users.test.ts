@@ -7,7 +7,15 @@ function hasDuplicates(array: unknown[]): boolean {
 }
 
 describe('Member constraints', () => {
-	test('Each member has a unique ID', () => {
+	test("There aren't any duplicate values", () => {
 		expect(hasDuplicates(members.map((e) => e.id))).toBeFalsy();
+		expect(hasDuplicates(members.map((e) => e.name))).toBeFalsy();
+		expect(hasDuplicates(members.map((e) => e.url))).toBeFalsy();
+	});
+
+	test('All URLs are valid', () => {
+		expect(() => {
+			void members.map((e) => new URL(e.url));
+		}).not.toThrow();
 	});
 });
