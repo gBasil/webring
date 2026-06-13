@@ -1,6 +1,4 @@
-overrides:
-  vite: 'npm:@voidzero-dev/vite-plus-core@latest'
-  vitest: 'npm:@voidzero-dev/vite-plus-test@latest'
+verifyDepsBeforeRun: false # I'm going to kill who came up with the ridiculous default of "install"
 allowBuilds:
   esbuild: true
   sharp: true

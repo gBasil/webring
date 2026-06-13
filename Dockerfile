@@ -7,14 +7,16 @@ RUN apk add bash
 RUN corepack enable
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
-WORKDIR /app
-COPY . .
-
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
+WORKDIR /app
+ENV CI=true
 ENV ASTRO_TELEMETRY_DISABLED=1
-RUN pnpm run build
-RUN pnpm prune --prod --ignore-scripts
+
+COPY package.json pnpm-lock.yaml .
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts --prod
+
+COPY . .
+RUN pnpm astro build
 
 FROM node:24 AS runtime
 
