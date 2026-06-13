@@ -14,4 +14,8 @@ export const members: Member[] = [
 	{ id: 'alyxia', name: 'Alyxia', url: 'https://alyxia.dev' },
 	{ id: 'cynthia', name: 'Cynthia', url: 'https://c7.pm' },
 	{ id: 'kyza', name: 'Kyza', url: 'https://github.com/kyza' },
+	{ id: 'kneesox', name: 'Kneesox', url: 'https://kneesox.moe' },
+	{ id: 'xirreal', name: 'xirreal', url: 'https://xirreal.dev' },
+	{ id: 'allie', name: 'Allie', url: 'https://cutemoth.uk' },
+	{ id: 'sophia', name: 'sophia', url: 'https://zvava.org' },
 ];
