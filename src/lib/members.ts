@@ -33,6 +33,7 @@ export const members: Member[] = [
 	{ id: 'rort1z2', name: 'R0rt1z2', url: 'https://r0rt1z2.com' },
 	{ id: 'nullptr', name: 'nullptr', url: 'https://github.com/nullpo1nt3d' },
 	{ id: 'maggie', name: 'Maggie', url: 'https://maggiepi.fyi' },
+	{ id: 'phorcys', name: 'Phorcys', url: 'https://github.com/phorcys420' },
 ];
 
 export const navigatableMembers = members.filter(
