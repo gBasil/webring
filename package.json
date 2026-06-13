@@ -20,11 +20,5 @@
 	"engines": {
 		"node": ">=22.12.0"
 	},
-	"packageManager": "pnpm@11.6.0",
-	"pnpm": {
-		"overrides": {
-			"vite": "npm:@voidzero-dev/vite-plus-core@latest",
-			"vitest": "npm:@voidzero-dev/vite-plus-test@latest"
-		}
-	}
+	"packageManager": "pnpm@11.6.0"
 }
