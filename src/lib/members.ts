@@ -21,4 +21,5 @@ export const members: Member[] = [
 	{ id: 'chloe', name: 'Chloe', url: 'https://sapphic.moe' },
 	{ id: 'overimagine', name: 'OVERIMAGINE', url: 'https://overimagine.xyz' },
 	{ id: 'valerie', name: 'valerie', url: 'https://latte.party' },
+	{ id: 'rort1z2', name: 'R0rt1z2', url: 'https://r0rt1z2.com' },
 ];
