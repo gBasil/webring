@@ -22,4 +22,5 @@ export const members: Member[] = [
 	{ id: 'overimagine', name: 'OVERIMAGINE', url: 'https://overimagine.xyz' },
 	{ id: 'valerie', name: 'valerie', url: 'https://latte.party' },
 	{ id: 'rort1z2', name: 'R0rt1z2', url: 'https://r0rt1z2.com' },
+	{ id: 'nullptr', name: 'nullptr', url: 'https://github.com/nullpo1nt3d' },
 ];
