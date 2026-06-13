@@ -1,3 +1,4 @@
+import { readdir } from 'node:fs/promises';
 import { describe, expect, test } from 'vite-plus/test';
 import { members } from '../src/lib/members';
 
@@ -17,5 +18,12 @@ describe('Member constraints', () => {
 		expect(() => {
 			void members.map((e) => new URL(e.url));
 		}).not.toThrow();
+	});
+
+	test('All members have their corresponding avatar files', async () => {
+		const requiredMembers = members.map((e) => e.id + '.svg').sort();
+		const avatars = (await readdir('./public/avatars/')).sort();
+
+		expect(avatars).toEqual(expect.arrayContaining(requiredMembers));
 	});
 });
