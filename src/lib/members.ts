@@ -12,4 +12,6 @@ export const members: Member[] = [
 	{ id: 'aagaming', name: 'AAGaming', url: 'https://aagaming.me' },
 	{ id: 'tasky', name: 'tasky', url: 'https://uwu.network/~tasky' },
 	{ id: 'alyxia', name: 'Alyxia', url: 'https://alyxia.dev' },
+	{ id: 'cynthia', name: 'Cynthia', url: 'https://c7.pm' },
+	{ id: 'kyza', name: 'Kyza', url: 'https://github.com/kyza' },
 ];
