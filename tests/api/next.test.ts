@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from 'vite-plus/test';
 import { GET } from '../../src/pages/next';
 
 vi.mock(import('../../src/lib/members'), () => ({
-	members: [
+	navigatableMembers: [
 		{ id: 'a', name: 'A', url: 'https://example.com/a' },
 		{ id: 'b', name: 'B', url: 'https://example.com/b' },
 		{ id: 'c', name: 'C', url: 'https://example.com/c' },

@@ -1,3 +1,5 @@
+import { hasFlag } from './flags';
+
 type Member = {
 	/** The unique identifier of the member. Used for the avatar filename and (if applicable) custom apps. */
 	id: string;
@@ -5,7 +7,14 @@ type Member = {
 	name: string;
 	/** The website URL, which is used for redirects, and is linked to (when no custom app exists). */
 	url: string;
+	/** Optional member flags. */
+	flags?: number;
 };
+
+export enum MemberFlags {
+	/** Whether to skip over this member when navigating across the webring. */
+	SkipNavigation = 1 << 0,
+}
 
 export const members: Member[] = [
 	{ id: 'basil', name: 'Basil', url: 'https://basil.cafe' },
@@ -24,3 +33,7 @@ export const members: Member[] = [
 	{ id: 'rort1z2', name: 'R0rt1z2', url: 'https://r0rt1z2.com' },
 	{ id: 'nullptr', name: 'nullptr', url: 'https://github.com/nullpo1nt3d' },
 ];
+
+export const navigatableMembers = members.filter(
+	(member) => member.flags === undefined || !hasFlag(member.flags, MemberFlags.SkipNavigation),
+);

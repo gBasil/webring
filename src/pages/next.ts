@@ -1,15 +1,15 @@
 import type { APIRoute } from 'astro';
 
-import { members } from '../lib/members';
+import { navigatableMembers } from '../lib/members';
 
 export const GET = (({ redirect, url }) => {
 	const id = url.searchParams.get('id');
 	if (id === null) return redirect('/rand');
 
-	const i = members.findIndex((e) => e.id === id);
+	const i = navigatableMembers.findIndex((e) => e.id === id);
 	if (i === -1) return redirect('/rand');
 
-	const next = members[(i + 1) % members.length];
+	const next = navigatableMembers[(i + 1) % navigatableMembers.length];
 
 	return redirect(next.url);
 }) satisfies APIRoute;
