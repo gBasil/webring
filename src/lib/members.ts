@@ -18,4 +18,5 @@ export const members: Member[] = [
 	{ id: 'xirreal', name: 'xirreal', url: 'https://xirreal.dev' },
 	{ id: 'allie', name: 'Allie', url: 'https://cutemoth.uk' },
 	{ id: 'sophia', name: 'sophia', url: 'https://zvava.org' },
+	{ id: 'chloe', name: 'Chloe', url: 'https://sapphic.moe' },
 ];
