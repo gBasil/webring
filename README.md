@@ -21,13 +21,20 @@ Note that the initial form of this webpage was written to work with a specific w
 ```html
 <!-- Stylized -->
 <div class="app-icon-ring">
-	<a href="/prev?id=[id]"><img src="https://ring.basil.cafe/images/left.svg" /></a>
-	<a href="https://ring.basil.cafe"><img src="https://ring.basil.cafe/avatars/[id].svg" /></a>
-	<a href="/next?id=[id]"><img src="https://ring.basil.cafe/images/right.svg" /></a>
+	<a href="/prev?id=[id]">
+		<img src="https://ring.basil.cafe/images/left.svg" width="52" height="52" />
+	</a>
+	<a href="https://ring.basil.cafe">
+		<img src="https://ring.basil.cafe/avatars/[id].svg" width="52" height="52" />
+	</a>
+	<a href="/next?id=[id]">
+		<img src="https://ring.basil.cafe/images/right.svg" width="52" height="52" />
+	</a>
 </div>
 <style>
 	.app-icon-ring {
 		display: flex;
+		width: min-content;
 		gap: 16px;
 		padding: 10px;
 		border-radius: 22px;
