@@ -27,10 +27,10 @@ const { id } = Astro.props;
 		transition:
 			var(--transition),
 			opacity 0.3s var(--app-open-ease) 0.1s;
+		will-change: left, top, clip-path, scale, opacity;
 
 		/* Sorry about the overscroll! If it's enough of an issue, I'll fix it! */
 		overflow: auto;
-
 		opacity: 0;
 
 		&.visible {

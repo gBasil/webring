@@ -1,0 +1,76 @@
+---
+interface Props {
+	pages: number;
+}
+
+const { pages } = Astro.props;
+---
+
+<div class='pagination'>
+	{
+		pages > 1 &&
+			Array.from({ length: pages }, (_, i) => (
+				<div class={i === 0 ? 'selected' : undefined} />
+			))
+	}
+</div>
+
+<style>
+	.pagination {
+		display: flex;
+		justify-content: center;
+		gap: 8px;
+
+		> div {
+			width: 6px;
+			height: 6px;
+			border-radius: 999px;
+			background-color: #ffffff72;
+			position: relative;
+
+			&::after {
+				content: '';
+				position: absolute;
+				inset: -4px;
+				bottom: -6px;
+			}
+
+			&.selected {
+				background-color: white;
+			}
+		}
+	}
+</style>
+
+<script>
+	const scroller: HTMLDivElement = document.querySelector('.scroller')!;
+	const screen: HTMLDivElement = document.querySelector('.screen')!;
+	const pagination: HTMLDivElement = document.querySelector('.pagination')!;
+
+	const pageWidth = screen.clientWidth;
+
+	// Set up click listeners
+	for (let i = 0; i < pagination.children.length; i++) {
+		const dot = pagination.children[i];
+		dot.addEventListener('click', () => {
+			scroller.scrollTo({
+				left: pageWidth * i,
+				// I've been unable to get smooth scroll working, unfortunately
+				behavior: 'smooth',
+			});
+		});
+	}
+
+	// Change on scroll
+	let selectedPage = 0;
+	scroller.addEventListener('scroll', (e) => {
+		const scroll = (e.target as HTMLDivElement).scrollLeft;
+		const newSelectedPage = Math.ceil((scroll - pageWidth / 2) / pageWidth);
+
+		if (selectedPage !== newSelectedPage) {
+			pagination.children[selectedPage].classList.remove('selected');
+			pagination.children[newSelectedPage].classList.add('selected');
+			selectedPage = newSelectedPage;
+		}
+	});
+</script>

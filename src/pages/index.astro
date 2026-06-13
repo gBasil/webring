@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Phone from '../components/Phone.astro';
+import Phone from '../components/phone/Phone.astro';
+import Pagination from '../components/phone/Pagination.astro';
 import About from '../components/apps/About.astro';
 import { members } from '../lib/members';
 
@@ -22,15 +23,18 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 						return (
 							<div class='page'>
 								{entries.map((e) => (
-									// This HTML structure is jank because the page was originally written for a webring that formatted members like that
-									<div>
-										<a href={e.url}>{e.name}</a>
-										<img
-											src={`/avatars/${e.id}.svg`}
-											width='52'
-											height='52'
-										/>
-									</div>
+									<a href={e.url} class='icon'>
+										{/* We have an icon placeholder container here so that we can retain the icon's position and also animate it. */}
+										<div>
+											<img
+												src={`/avatars/${e.id}.svg`}
+												id={`icon-${e.id}`}
+												width='52'
+												height='52'
+											/>
+										</div>
+										{e.name}
+									</a>
 								))}
 							</div>
 						);
@@ -40,24 +44,8 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		</div>
 
 		<div class='bottom'>
-			<div class='pagination'>
-				{
-					pageCount > 1 &&
-						Array.from({ length: pageCount }, (_, i) => (
-							<div class={i === 0 ? 'selected' : undefined} />
-						))
-				}
-			</div>
+			<Pagination pages={pageCount} />
 			<div class='bar'>
-				{
-					/*
-					<div>
-						<a href='/prev'>
-							<img src='/images/left.svg' width='52' height='52' />
-						</a>
-					</div>
-					*/
-				}
 				<div>
 					<button id='about-icon'>
 						<img
@@ -67,15 +55,6 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 						/>
 					</button>
 				</div>
-				{
-					/*
-					<div>
-						<a href='/next'>
-							<img src='/images/right.svg' width='52' height='52' />
-						</a>
-					</div>
-					*/
-				}
 			</div>
 		</div>
 
@@ -96,6 +75,12 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 			left 0.6s var(--app-open-ease), top 0.6s var(--app-open-ease),
 			border-radius 0.6s var(--app-open-ease),
 			width 0.6s var(--app-open-ease), height 0.6s var(--app-open-ease);
+		/* Seems to help with browser jank for app open/close animations. */
+		--app-open-icon-will-change: left, top, border-radius, width, height;
+	}
+
+	* {
+		box-sizing: border-box;
 	}
 
 	html::after {
@@ -150,40 +135,39 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 				margin-bottom: 0;
 
 				/* Each user entry */
-				> div {
-					position: relative;
-					width: 64px;
-					height: 64px;
+				a.icon {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: space-between;
+					width: 72px;
+					height: 72px;
 					padding: 4px;
+					padding-bottom: 0;
 
-					&:active img {
-						filter: var(--icon-active-filter);
-					}
+					color: #ffffffe6;
+					font-size: 10px;
+					text-decoration: none;
+					user-select: none;
+					cursor: pointer;
 
-					img {
-						display: block;
+					> div {
 						width: var(--icon-size);
 						height: var(--icon-size);
-						margin: auto;
-						border-radius: var(--icon-radius);
 
-						z-index: 2;
-						transition: var(--app-open-icon-transition);
-					}
+						&:active img {
+							filter: var(--icon-active-filter);
+						}
 
-					a {
-						position: absolute;
-						inset: 0;
-						align-content: end;
-						text-align: center;
+						img {
+							display: block;
+							width: var(--icon-size);
+							height: var(--icon-size);
+							border-radius: var(--icon-radius);
 
-						z-index: 1;
-
-						color: #ffffffe6;
-						font-size: 10px;
-						text-decoration: none;
-						user-select: none;
-						cursor: pointer;
+							transition: var(--app-open-icon-transition);
+							will-change: var(--app-open-icon-will-change);
+						}
 					}
 				}
 			}
@@ -195,31 +179,6 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		flex-direction: column;
 		gap: 8px;
 
-		.pagination {
-			display: flex;
-			justify-content: center;
-			gap: 8px;
-
-			> div {
-				width: 6px;
-				height: 6px;
-				border-radius: 999px;
-				background-color: #ffffff72;
-				position: relative;
-
-				&::after {
-					content: '';
-					position: absolute;
-					inset: -4px;
-					bottom: -6px;
-				}
-
-				&.selected {
-					background-color: white;
-				}
-			}
-		}
-
 		.bar {
 			display: flex;
 			justify-content: center;
@@ -227,10 +186,9 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 			padding: 10px;
 			background-color: #ffffff72;
 
-			/* We have a placeholder item here so that we can retain the icon position and also animate it. */
 			> div,
 			button {
-				all: unset; /* Reset button styles */
+				all: unset; /* Remove the default button styles */
 				height: var(--icon-size);
 				width: var(--icon-size);
 				cursor: pointer;
@@ -241,8 +199,8 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 					width: var(--icon-size);
 					border-radius: var(--icon-radius);
 
-					z-index: 2;
 					transition: var(--app-open-icon-transition);
+					will-change: var(--app-open-icon-will-change);
 
 					&:active {
 						filter: var(--icon-active-filter);
@@ -254,38 +212,14 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 </style>
 
 <script>
-	const pagination: HTMLDivElement = document.querySelector('.pagination')!;
 	const scroller: HTMLDivElement = document.querySelector('.scroller')!;
 	const screen: HTMLDivElement = document.querySelector('.screen')!;
 	const home: HTMLButtonElement = document.querySelector('#home')!;
 
-	const pageWidth = screen.clientWidth;
-
-	for (let i = 0; i < pagination.children.length; i++) {
-		const dot = pagination.children[i];
-		dot.addEventListener('click', () => {
-			// Unable to get smooth scroll working, even when scrolling the scroller element
-			const page = document.querySelectorAll('.page')[i];
-			page.scrollIntoView({ behavior: 'smooth' });
-		});
-	}
-
-	let selectedPage = 0;
-	scroller.addEventListener('scroll', (e) => {
-		const scroll = (e.target as HTMLDivElement).scrollLeft;
-		const newSelectedPage = Math.ceil((scroll - pageWidth / 2) / pageWidth);
-
-		if (selectedPage !== newSelectedPage) {
-			pagination.children[selectedPage].classList.remove('selected');
-			pagination.children[newSelectedPage].classList.add('selected');
-			selectedPage = newSelectedPage;
-		}
-	});
-
 	// Behold! Terrible! App entering/exiting logic!
 
+	// Lock scrolling when animating
 	function animationLock() {
-		// Lock scrolling when animating
 		scroller.style.overflow = 'hidden';
 		animating = true;
 
@@ -295,10 +229,10 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		}, 600);
 	}
 
-	const appRect = screen.getBoundingClientRect();
 	const appScale =
-		document.querySelector('img[src^="/avatars/"]')!.getBoundingClientRect()
-			.width / appRect.width;
+		document.querySelector('img[id^="icon-"]')!.getBoundingClientRect()
+			.width / screen.getBoundingClientRect().width;
+
 	let iconRect: DOMRect;
 	let icon: HTMLDivElement;
 	let app: HTMLDivElement;
@@ -307,20 +241,28 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 
 	function openApp(icon_: HTMLImageElement, app_: HTMLDivElement) {
 		if (animating || !onHome) return;
-		onHome = false;
 		animationLock();
+		onHome = false;
 
 		icon = icon_;
 		app = app_;
-		iconRect = icon.getBoundingClientRect();
+		const iconRectAbs = icon.getBoundingClientRect();
+		const appRect = screen.getBoundingClientRect();
+
+		// Relative to the screen, which is the closest relatively-positioned ancestor
+		iconRect = new DOMRect(
+			iconRectAbs.left - appRect.left,
+			iconRectAbs.top - appRect.top,
+			iconRectAbs.width,
+			iconRectAbs.height,
+		);
 
 		app.style.display = 'block'; // Show the app
-		app.style.left = iconRect.left - appRect.left + 'px';
+		app.style.left = iconRect.left + 'px';
 		app.style.top =
 			// Offsets the icon relative to the screen, which is the closest relatively-positioned ancestor
 			iconRect.top -
-			appRect.top -
-			// Offset to make up for the clip path (taking in account the scale)
+			// Offset to make up for the clip path (taking in account the scale), to center the app against the icon
 			(appRect.height * appScale - iconRect.height) / 2 +
 			'px';
 		// This could probably be done statically, but might as well do it like this so we don't have to change numbers in two places (more than we already do)
@@ -329,14 +271,13 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		app.style.scale = appScale + '';
 		app.style.clipPath = `inset(${(appRect.height - appRect.width) / 2}px 0px round ${14 / appScale}px)`;
 
-		icon.style.position = 'fixed';
+		icon.style.position = 'absolute';
 		icon.style.left = iconRect.left + 'px';
 		icon.style.top = iconRect.top + 'px';
 
 		setTimeout(() => {
-			icon.style.left = appRect.left + 'px';
-			icon.style.top =
-				appRect.top + (appRect.height - appRect.width) / 2 + 'px';
+			icon.style.left = '0px';
+			icon.style.top = (appRect.height - appRect.width) / 2 + 'px';
 			icon.style.width = appRect.width + 'px';
 			icon.style.height = appRect.width + 'px';
 			icon.style.borderRadius = '0px';
@@ -355,27 +296,13 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		animationLock();
 
 		app.classList.remove('visible');
-		app.style.display = 'block'; // Show the app
-		app.style.left = iconRect.left - appRect.left + 'px';
-		app.style.top =
-			// Offsets the icon relative to the screen, which is the closest relatively-positioned ancestor
-			iconRect.top -
-			appRect.top -
-			// Offset to make up for the clip path (taking in account the scale)
-			(appRect.height * appScale - iconRect.height) / 2 +
-			'px';
-		// This could probably be done statically, but might as well do it like this so we don't have to change numbers in two places (more than we already do)
-		app.style.width = appRect.width + 'px';
-		app.style.height = appRect.height + 'px';
-		app.style.scale = appScale + '';
-		app.style.clipPath = `inset(${(appRect.height - appRect.width) / 2}px 0px round ${14 / appScale}px)`;
 
-		icon.style.opacity = '1';
 		icon.style.left = iconRect.left + 'px';
 		icon.style.top = iconRect.top + 'px';
-		icon.style.width = 'var(--icon-size)';
-		icon.style.height = 'var(--icon-size)';
-		icon.style.borderRadius = 'var(--icon-radius)';
+		icon.attributeStyleMap.delete('opacity');
+		icon.attributeStyleMap.delete('width');
+		icon.attributeStyleMap.delete('height');
+		icon.attributeStyleMap.delete('border-radius');
 
 		setTimeout(() => {
 			app.attributes.removeNamedItem('style');
@@ -399,10 +326,8 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		'div.app:not(#about)',
 	)) {
 		const id = app.id;
-		const icon: HTMLImageElement = document.querySelector(
-			`img[src="/avatars/${id}.svg"]`,
-		)!;
-		const link = icon.previousElementSibling as HTMLAnchorElement;
+		const icon: HTMLImageElement = document.querySelector(`#icon-${id}`)!;
+		const link = icon.parentElement!.parentElement as HTMLAnchorElement;
 
 		link.attributes.removeNamedItem('href');
 		link.addEventListener('click', (e) => {
