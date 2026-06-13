@@ -224,7 +224,7 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 		animating = true;
 
 		setTimeout(() => {
-			scroller.attributeStyleMap.delete('overflow');
+			scroller.style.overflow = '';
 			animating = false;
 		}, 600);
 	}
@@ -299,10 +299,10 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 
 		icon.style.left = iconRect.left + 'px';
 		icon.style.top = iconRect.top + 'px';
-		icon.attributeStyleMap.delete('opacity');
-		icon.attributeStyleMap.delete('width');
-		icon.attributeStyleMap.delete('height');
-		icon.attributeStyleMap.delete('border-radius');
+		icon.style.opacity = '';
+		icon.style.width = '';
+		icon.style.height = '';
+		icon.style.borderRadius = '';
 
 		setTimeout(() => {
 			app.attributes.removeNamedItem('style');
