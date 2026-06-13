@@ -20,4 +20,5 @@ export const members: Member[] = [
 	{ id: 'sophia', name: 'sophia', url: 'https://zvava.org' },
 	{ id: 'chloe', name: 'Chloe', url: 'https://sapphic.moe' },
 	{ id: 'overimagine', name: 'OVERIMAGINE', url: 'https://overimagine.xyz' },
+	{ id: 'valerie', name: 'valerie', url: 'https://latte.party' },
 ];
