@@ -1,7 +1,5 @@
 # App Icon Webring
 
-Note that the initial form of this webpage was written to work with a specific webring software, before the decision to write our own, so some of the code jank is due to that.
-
 ## Adding Yourself
 
 1. Add yourself to `src/lib/members.ts`.

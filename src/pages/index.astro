@@ -13,7 +13,6 @@ const pageCount = Math.ceil(members.length / maxIconsPerPage);
 	<Phone>
 		<div class='scroller'>
 			<div class='icons'>
-				<!-- Rather yucky code to split the icons across several pages -->
 				{
 					Array.from({ length: pageCount }, (_, i) => {
 						const entries = members.slice(
