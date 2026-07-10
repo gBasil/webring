@@ -26,7 +26,6 @@ export const members: Member[] = [
 	{ id: 'aagaming', name: 'AAGaming', url: 'https://aagaming.me' },
 	{ id: 'kneesox', name: 'Kneesox', url: 'https://kneesox.moe' },
 	{ id: 'xirreal', name: 'xirreal', url: 'https://xirreal.dev' },
-	{ id: 'allie', name: 'Allie', url: 'https://cutemoth.uk' },
 	{ id: 'sophia', name: 'Sophia', url: 'https://zvava.org' },
 	{ id: 'overimagine', name: 'OVERIMAGINE', url: 'https://overimagine.xyz' },
 	{ id: 'valerie', name: 'valerie', url: 'https://latte.party' },
